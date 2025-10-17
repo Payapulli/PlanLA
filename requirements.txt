@@ -1,7 +1,7 @@
 streamlit
 pandas
 plotly
-numpy
+numpy<2.0
 geopandas==0.14.3
 requests
 shapely
