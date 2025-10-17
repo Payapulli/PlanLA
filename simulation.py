@@ -1,10 +1,12 @@
 """
 Simulation module for PlanLA Impact Simulator.
 Contains logic for calculating Olympic investment impacts on neighborhoods.
+Updated to support neighborhood-specific investments with network effects.
 """
 
 import pandas as pd
 import numpy as np
+from network_effects import build_neighborhood_network, calculate_spillover_effects
 
 def calculate_displacement_risk(base_rent, median_income, permit_density, distance_to_olympic_site):
     """
@@ -147,6 +149,61 @@ def generate_summary_stats(df_sim):
     }
     
     return stats
+
+def simulate_localized_investments(df, investments_by_neighborhood, network=None):
+    """
+    Simulate impacts of neighborhood-specific investments with network spillover effects.
+
+    Args:
+        df (pd.DataFrame): Neighborhood data
+        investments_by_neighborhood (dict): {neighborhood: {'transit': $X, 'affordable': $Y, 'community': $Z}}
+        network (dict): Neighborhood adjacency network (optional, will build if not provided)
+
+    Returns:
+        pd.DataFrame: Updated neighborhood data with direct and spillover impacts
+    """
+    df_sim = df.copy()
+
+    # Calculate baseline displacement risk
+    df_sim['baseline_displacement_risk'] = df_sim.apply(
+        lambda row: calculate_displacement_risk(
+            row['base_rent'],
+            row['median_income'],
+            row['permit_density'],
+            row['distance_to_olympic_site']
+        ), axis=1
+    )
+
+    # Initialize simulated values (no changes yet)
+    df_sim['simulated_rent'] = df_sim['base_rent']
+    df_sim['simulated_displacement_risk'] = df_sim['baseline_displacement_risk']
+
+    # Build neighborhood network if not provided
+    if network is None:
+        network = build_neighborhood_network(df, distance_threshold=5.0)
+
+    # Apply network effects to calculate spillover
+    df_with_spillover = calculate_spillover_effects(
+        df_sim,
+        investments_by_neighborhood,
+        network,
+        spillover_strength=0.3
+    )
+
+    # Apply spillover impacts to rent and risk
+    df_with_spillover['simulated_rent'] += df_with_spillover['spillover_rent_impact']
+    df_with_spillover['simulated_displacement_risk'] += df_with_spillover['spillover_risk_impact']
+
+    # Ensure values stay within reasonable bounds
+    df_with_spillover['simulated_rent'] = df_with_spillover['simulated_rent'].clip(lower=1000, upper=6000)
+    df_with_spillover['simulated_displacement_risk'] = df_with_spillover['simulated_displacement_risk'].clip(lower=0, upper=100)
+
+    # Calculate changes
+    df_with_spillover['rent_change'] = df_with_spillover['simulated_rent'] - df_with_spillover['base_rent']
+    df_with_spillover['rent_change_pct'] = (df_with_spillover['rent_change'] / df_with_spillover['base_rent']) * 100
+    df_with_spillover['risk_change'] = df_with_spillover['simulated_displacement_risk'] - df_with_spillover['baseline_displacement_risk']
+
+    return df_with_spillover
 
 def mock_llm_summary(stats, transit_investment, community_hub_investment):
     """
