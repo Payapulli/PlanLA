@@ -613,7 +613,7 @@ def main():
         try:
             from PIL import Image
             logo = Image.open("olympics-image.png")
-            st.image(logo, width=150)
+            st.image(logo, width=250)
         except:
             st.markdown("🏅")  # Fallback to emoji if image not found
 
