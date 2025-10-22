@@ -222,11 +222,19 @@ def create_real_choropleth_map(gdf):
             'permit_density': ':.1f',
             'rent_burden_pct': ':.1f'
         },
-        color_continuous_scale='Reds',
+        color_continuous_scale=[
+            [0.0, '#2ECC71'],   # Green - Low risk (0-20%)
+            [0.2, '#F1C40F'],   # Yellow - Low-Medium risk (20-40%)
+            [0.4, '#E67E22'],   # Orange - Medium risk (40-60%)
+            [0.6, '#E74C3C'],   # Red - Medium-High risk (60-80%)
+            [1.0, '#8B0000']    # Dark Red - High risk (80-100%)
+        ],
+        range_color=[0, 100],
+        labels={'simulated_displacement_risk': 'Displacement Risk (%)'},
         mapbox_style="open-street-map",
         center={"lat": 34.0522, "lon": -118.2437},
         zoom=9,
-        title="Displacement Risk by Neighborhood (Real LA Data)"
+        title="Displacement Risk Heatmap by Neighborhood"
     )
     
     fig.update_layout(
@@ -283,12 +291,20 @@ def create_mock_choropleth_map(df_sim):
             'lat': False,
             'lon': False
         },
-        color_continuous_scale='Reds',
+        color_continuous_scale=[
+            [0.0, '#2ECC71'],   # Green - Low risk
+            [0.2, '#F1C40F'],   # Yellow - Low-Medium risk
+            [0.4, '#E67E22'],   # Orange - Medium risk
+            [0.6, '#E74C3C'],   # Red - Medium-High risk
+            [1.0, '#8B0000']    # Dark Red - High risk
+        ],
+        range_color=[0, 100],
+        labels={'simulated_displacement_risk': 'Displacement Risk (%)'},
         size_max=20,
         zoom=9,
         center={"lat": 34.0522, "lon": -118.2437},  # Center on LA
         mapbox_style="open-street-map",
-        title="Displacement Risk by Neighborhood (Point Data)"
+        title="Displacement Risk Heatmap by Neighborhood"
     )
     
     fig.update_layout(
@@ -853,11 +869,13 @@ def main():
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Map View", "Data Table", "Charts", "Summary", "AI Assistant", "About"])
     
     with tab1:
-        st.subheader("Displacement Risk Map")
+        st.subheader("Displacement Risk Heatmap")
         if has_geometry:
-            st.markdown("*Red areas indicate higher displacement risk. Real LA neighborhood boundaries.*")
+            st.markdown("🟢 **Green** = Low Risk (0-20%) | 🟡 **Yellow** = Medium Risk (20-40%) | 🟠 **Orange** = Elevated Risk (40-60%) | 🔴 **Red** = High Risk (60-80%) | 🔴 **Dark Red** = Critical Risk (80-100%)")
+            st.markdown("*Real LA neighborhood boundaries shown with color-coded displacement risk levels*")
         else:
-            st.markdown("*Red areas indicate higher displacement risk. Circle size represents rent level.*")
+            st.markdown("🟢 **Green** = Low Risk | 🟡 **Yellow** = Medium Risk | 🟠 **Orange** = Elevated Risk | 🔴 **Red** = High Risk | 🔴 **Dark Red** = Critical Risk")
+            st.markdown("*Circle size represents rent level. Hover for details.*")
         
         map_fig = create_choropleth_map(df_sim, has_geometry)
         st.plotly_chart(map_fig, use_container_width=True)
