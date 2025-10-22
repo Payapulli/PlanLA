@@ -1079,27 +1079,6 @@ def main():
 
         ---
 
-        ## Investment Effects
-
-        Each investment type has direct impacts on neighborhoods:
-
-        ### Transit Infrastructure ($50M increments)
-        - **Rent Impact**: +5-15% increase (varies by Olympic proximity)
-        - **Displacement Risk**: +5 points (gentrification effect)
-        - **Logic**: Improved accessibility increases property values
-
-        ### Affordable Housing ($30M increments)
-        - **Rent Impact**: -5% decrease (increased supply)
-        - **Displacement Risk**: -40% reduction from baseline
-        - **Logic**: Strongest anti-displacement intervention, protects existing residents
-
-        ### Community Hubs ($10M increments)
-        - **Rent Impact**: +3% increase (improved amenities)
-        - **Displacement Risk**: -25% reduction from baseline
-        - **Logic**: Social cohesion and local services build community resilience
-
-        ---
-
         ## Network Effects Algorithm
 
         Investments propagate to nearby neighborhoods using spatial network analysis:
