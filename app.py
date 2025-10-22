@@ -884,13 +884,7 @@ def main():
     
     with tab1:
         st.subheader("Displacement Risk Heatmap")
-        if has_geometry:
-            st.markdown("🟢 **Green** = Low Risk (0-20%) | 🟡 **Yellow** = Medium Risk (20-40%) | 🟠 **Orange** = Elevated Risk (40-60%) | 🔴 **Red** = High Risk (60-80%) | 🔴 **Dark Red** = Critical Risk (80-100%)")
-            st.markdown("*Real LA neighborhood boundaries shown with color-coded displacement risk levels*")
-        else:
-            st.markdown("🟢 **Green** = Low Risk | 🟡 **Yellow** = Medium Risk | 🟠 **Orange** = Elevated Risk | 🔴 **Red** = High Risk | 🔴 **Dark Red** = Critical Risk")
-            st.markdown("*Circle size represents rent level. Hover for details.*")
-        
+
         map_fig = create_choropleth_map(df_sim, has_geometry)
         st.plotly_chart(map_fig, use_container_width=True)
     
