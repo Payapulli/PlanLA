@@ -10,9 +10,19 @@ load_dotenv()
 
 def get_secret(key: str, default: str = "") -> str:
     """Fetch a secret from Streamlit Cloud or .env."""
-    if key in st.secrets:
-        return st.secrets[key]
-    return os.getenv(key, default)
+    # Try .env first (always works)
+    env_value = os.getenv(key)
+    if env_value:
+        return env_value
+
+    # Try Streamlit secrets if running in Streamlit context
+    try:
+        if key in st.secrets:
+            return st.secrets[key]
+    except:
+        pass  # Not in Streamlit context
+
+    return default
 
 # LA Open Data Portal API Keys
 LA_DATA_API_KEY = get_secret("LA_DATA_API_KEY")

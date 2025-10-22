@@ -622,9 +622,9 @@ def main():
     )
 
     if remaining_budget < 0:
-        st.sidebar.error("⚠️ Over budget! Remove some investments.")
+        st.sidebar.error("Over budget! Remove some investments.")
     elif remaining_budget < 50_000_000:
-        st.sidebar.warning(f"⚠️ Only ${remaining_budget/1_000_000:.0f}M remaining")
+        st.sidebar.warning(f"Only ${remaining_budget/1_000_000:.0f}M remaining")
 
     st.sidebar.markdown("---")
     
@@ -742,7 +742,7 @@ def main():
 
                 # Check budget
                 if new_total > st.session_state.total_budget:
-                    st.sidebar.error(f"❌ This would exceed budget by ${(new_total - st.session_state.total_budget)/1_000_000:.0f}M")
+                    st.sidebar.error(f"This would exceed budget by ${(new_total - st.session_state.total_budget)/1_000_000:.0f}M")
                 else:
                     # Save the investments
                     st.session_state.investments[hood] = new_investment
