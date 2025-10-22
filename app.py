@@ -1177,45 +1177,6 @@ def main():
         - Network effects: Spillover impacts on neighboring areas
         ```
 
-        ### What You Can Ask
-
-        **Neighborhood Analysis**
-        - "What's the displacement risk in Downtown LA?"
-        - "Which neighborhoods should I prioritize?"
-
-        **Strategy Optimization**
-        - "How can I reduce displacement while still building transit?"
-        - "What's the optimal investment mix for my current budget?"
-
-        **Scenario Comparison**
-        - "Should I invest more in affordable housing or community hubs?"
-        - "What happens if I focus all investments on high-risk areas?"
-
-        **Trade-Off Evaluation**
-        - "What are the downsides of heavy transit investment?"
-        - "How do I balance accessibility with anti-displacement?"
-
-        ### Example Conversation
-
-        **User:** "How can I reduce displacement in Downtown LA while still building transit?"
-
-        **AI Response:**
-        ```
-        Based on your current simulation showing Downtown LA at 78% displacement risk:
-
-        Priority Actions:
-        1. Deploy $60M in Affordable Housing (strongest anti-displacement)
-        2. Add $20M in Community Hubs (stability and social support)
-        3. Limit Transit to $30M (measured expansion)
-
-        This mix will:
-        - Reduce displacement risk by ~35 points
-        - Maintain transit connectivity to Olympic venues
-        - Protect existing residents while enabling infrastructure growth
-
-        Network effects will also benefit nearby neighborhoods within 5km.
-        ```
-
         ### Technical Details
 
         **Language Model Configuration**
