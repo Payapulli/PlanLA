@@ -606,23 +606,20 @@ def main():
     """Main Streamlit app function."""
 
     # Header with professional context and LA 2028 Olympics branding
-    col1, col2, col3 = st.columns([1, 6, 1])
+    col1, col2 = st.columns([6, 1])
 
     with col1:
-        # LA 2028 Olympics logo
+        st.markdown('<h1 class="main-header">PlanLA Impact Simulator</h1>', unsafe_allow_html=True)
+        st.markdown('<p class="sub-header">LA 2028 Olympics • Evidence-Based Infrastructure Investment Planning</p>', unsafe_allow_html=True)
+
+    with col2:
+        # LA 2028 Olympics logo - top right
         try:
             from PIL import Image
             logo = Image.open("olympics-image.png")
             st.image(logo, width=250)
         except:
             st.markdown("🏅")  # Fallback to emoji if image not found
-
-    with col2:
-        st.markdown('<h1 class="main-header">PlanLA Impact Simulator</h1>', unsafe_allow_html=True)
-        st.markdown('<p class="sub-header">LA 2028 Olympics • Evidence-Based Infrastructure Investment Planning</p>', unsafe_allow_html=True)
-
-    with col3:
-        st.markdown("")  # Empty space for balance
 
     # Initialize session state for investments and network
     if 'investments' not in st.session_state:
