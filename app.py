@@ -198,29 +198,42 @@ def create_choropleth_map(df_sim, use_real_data=False):
 def create_real_choropleth_map(gdf):
     """
     Create choropleth map using real GeoDataFrame geometries.
-    
+
     Args:
         gdf (gpd.GeoDataFrame): GeoDataFrame with real geometries
-    
+
     Returns:
         plotly.graph_objects.Figure: Choropleth map
     """
-    # Convert GeoDataFrame to GeoJSON for Plotly
-    gdf_json = gdf.to_json()
-    
+    import json
+
+    # Prepare data with proper index
+    gdf_plot = gdf.copy()
+    gdf_plot['id'] = gdf_plot.index.astype(str)
+
+    # Convert GeoDataFrame to GeoJSON with proper feature IDs
+    geojson = json.loads(gdf_plot.to_json())
+
+    # Ensure each feature has an id property
+    for i, feature in enumerate(geojson['features']):
+        feature['id'] = str(i)
+
     fig = px.choropleth_mapbox(
-        gdf,
-        geojson=gdf_json,
-        locations=gdf.index,
+        gdf_plot,
+        geojson=geojson,
+        locations='id',
+        featureidkey='id',
         color='simulated_displacement_risk',
+        hover_name='neighborhood',
         hover_data={
-            'neighborhood': True,
+            'neighborhood': False,
             'simulated_displacement_risk': ':.1f',
             'rent_change_pct': ':.1f',
             'base_rent': ':.0f',
             'simulated_rent': ':.0f',
             'permit_density': ':.1f',
-            'rent_burden_pct': ':.1f'
+            'rent_burden_pct': ':.1f',
+            'id': False
         },
         color_continuous_scale=[
             [0.0, '#2ECC71'],   # Green - Low risk (0-20%)
@@ -234,14 +247,15 @@ def create_real_choropleth_map(gdf):
         mapbox_style="open-street-map",
         center={"lat": 34.0522, "lon": -118.2437},
         zoom=9,
-        title="Displacement Risk Heatmap by Neighborhood"
+        title="Displacement Risk Heatmap by Neighborhood",
+        opacity=0.6
     )
-    
+
     fig.update_layout(
         height=600,
         margin={"r": 0, "t": 30, "l": 0, "b": 0}
     )
-    
+
     return fig
 
 def create_mock_choropleth_map(df_sim):
